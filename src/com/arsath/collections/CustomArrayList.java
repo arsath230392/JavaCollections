@@ -114,7 +114,105 @@ public class CustomArrayList<E> implements Iterable<E>, Serializable {
 	/**
 	 * @param the elements in the list will be maintained in the original list
 	 */
+	@SuppressWarnings("unchecked")
 	public void retainAll(CustomArrayList<E> list) {
+		if (arr == null) {
+			return;
+		} else {
+			CustomArrayList<E> tempList = new CustomArrayList<E>();
+			for (Object currentObject : arr) {
+				if (list.contains(currentObject)) {
+					tempList.add((E) currentObject);
+				}
+			}
+			arr = tempList.getPrimitiveArray();
+		}
+
+	}
+
+	/**
+	 * Sorts the elements in ascending order. This sort is a generic sort that works
+	 * for strings and numerical data types
+	 */
+	@SuppressWarnings("unchecked")
+	public void sort() {
+		if (arr == null | arr.length == 1) {
+			return;
+		} else {
+			// If the array is of the type Numeric, we sort the array using numeric Sort
+			if (((E) arr[0]).getClass().getSimpleName().equals("Byte")
+					| ((E) arr[0]).getClass().getSimpleName().equals("Integer")
+					| ((E) arr[0]).getClass().getSimpleName().equals("Double")
+					| ((E) arr[0]).getClass().getSimpleName().equals("Short")
+					| ((E) arr[0]).getClass().getSimpleName().equals("Float")
+					| ((E) arr[0]).getClass().getSimpleName().equals("Long")) {
+				// array is sorted using Quick sort
+				QuickSort(0, arr.length - 1);
+
+			} else {
+				// array is sorted using CompareTo() method
+				Object temp = "";
+				for (int i = 0; i < arr.length - 1; i++) {
+					for (int j = i + 1; j < arr.length; j++) {
+						if ((arr[i].toString().toLowerCase()).compareTo(arr[j].toString().toLowerCase()) > 0) {
+							temp = arr[i];
+							arr[i] = arr[j];
+							arr[j] = temp;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Sorts the elements in descending order. This sort is a generic sort that
+	 * works for strings and numerical data types
+	 */
+	public void reverseSort() {
+		sort();
+		Object[] temp = arr;
+		int currentIteration = arr.length;
+		for (Object currentObject : temp) {
+			currentIteration--;
+			arr[currentIteration] = currentObject;
+		}
+
+	}
+
+	private void QuickSort(int low, int high) {
+		if (low < high) {
+
+			int pi = partition(low, high);
+
+			// Recursively sort elements before
+			// partition and after partition
+			QuickSort(low, pi - 1);
+			QuickSort(pi + 1, high);
+		}
+	}
+
+	private int partition(int low, int high) {
+		Double pivot = Double.valueOf(arr[high].toString());
+		int i = (low - 1); // index of smaller element
+		for (int j = low; j < high; j++) {
+			// If current element is smaller than the pivot
+			if (Double.valueOf(arr[j].toString()) < pivot) {
+				i++;
+
+				// swap arr[i] and arr[j]
+				Object temp = arr[i];
+				arr[i] = arr[j];
+				arr[j] = temp;
+			}
+		}
+
+		// swap arr[i+1] and arr[high] (or pivot)
+		Object temp = arr[i + 1];
+		arr[i + 1] = arr[high];
+		arr[high] = temp;
+
+		return i + 1;
 
 	}
 
