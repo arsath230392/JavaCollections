@@ -1,14 +1,58 @@
 package com.arsath.collections;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 
 public class CustomArrayList<E> implements Iterable<E>, Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -3978994619048637774L;
 	private Object arr[] = null;
+
+	// All the operations performed on the array is captured
+	private String[] log = new String[0];
+	private int operationsCounter = 0;
+
+	/**
+	 * Initializes the internal array with the specified size
+	 * 
+	 * @param the initial size of the array
+	 */
+	public CustomArrayList(int initialArraySize) {
+		arr = new Object[initialArraySize];
+
+		// adding to the log
+		addLog("Operation " + (operationsCounter++) + " -> Array was initialised with the size of " + initialArraySize);
+		addLog("Current array content at time:" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
+		addLog(this.toString());
+	}
+
+	public CustomArrayList(E[] initialArray) {
+		arr = initialArray;
+
+		// adding to the log
+		if (arr != null) {
+
+			addLog("Operation " + (operationsCounter++)
+					+ " -> Array was initialised with the content from an exisiting array");
+			for (E currentObject : initialArray) {
+				addLog(currentObject.toString());
+			}
+		} else {
+			addLog("Operation " + (operationsCounter++) + " -> An Empty array was initialised");
+		}
+
+		addLog("Current array content at time:" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
+		addLog(this.toString());
+	}
+
+	public CustomArrayList() {
+		// adding to the log
+		addLog("Operation " + (operationsCounter++) + " -> An Empty array was initialised");
+		addLog("Current array content at time:" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
+		addLog(this.toString());
+	}
 
 	/**
 	 * Adds an element to the list
@@ -31,7 +75,34 @@ public class CustomArrayList<E> implements Iterable<E>, Serializable {
 			}
 			arr[counter] = entry;
 		}
+		// adding to the log
+		addLog("Operation " + (operationsCounter++) + " -> add: element " + entry.toString() + " was added");
+		addLog("Current array content at time:" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
+		addLog(this.toString());
 		return true;
+	}
+
+	/**
+	 * sets the value in the specified index position of the array
+	 * 
+	 * @param index - the position to set the value
+	 * @param entry - the value to be set
+	 * @throws IndexWrongException - if the array is empty or the index is out of
+	 *                             bound, error message is thrown
+	 */
+	public void setAtindex(int index, E entry) throws WrongIndexException {
+		if (arr == null | arr.length >= index | index < 0) {
+			throw new WrongIndexException("The index is either out of bound or the array is empty");
+		} else {
+			arr[index] = entry;
+
+			// adding to the log
+			addLog("Operation " + (operationsCounter++) + " -> setAtindex: element " + entry.toString()
+					+ " was set at the index " + index);
+			addLog("Current array content at time:"
+					+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
+			addLog(this.toString());
+		}
 	}
 
 	/**
@@ -56,6 +127,13 @@ public class CustomArrayList<E> implements Iterable<E>, Serializable {
 				arr[counter] = currentCollectionObject;
 				counter++;
 			}
+
+			// adding to the log
+			addLog("Operation " + (operationsCounter++)
+					+ " -> addAll: The elements from the collection in parameter was added to the array");
+			addLog("Current array content at time:"
+					+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
+			addLog(this.toString());
 		}
 		return true;
 	}
@@ -83,9 +161,45 @@ public class CustomArrayList<E> implements Iterable<E>, Serializable {
 			}
 			arr = tempList.getPrimitiveArray();
 
+			// adding to the log
+			addLog("Operation " + (operationsCounter++) + " -> remove: The elements " + entry.toString()
+					+ " was removed from the array");
+			addLog("Current array content at time:"
+					+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
+			addLog(this.toString());
 		}
 		return removalDone;
 
+	}
+
+	/**
+	 * removes the element at the given index
+	 * 
+	 * @param the element index that needs to be removed
+	 * @throws IndexWrongException - if the array is empty or the index is out of
+	 *                             bound, error message is thrown
+	 */
+	public void removeAtIndex(int index) throws WrongIndexException {
+		if (arr == null | arr.length >= index | index < 0) {
+			throw new WrongIndexException("The index is either out of bound or the array is empty");
+		} else {
+			Object[] tempArray = arr;
+			arr = new Object[arr.length - 1];
+			int counter = 0;
+			for (Object currentObject : tempArray) {
+				if (!(counter == index)) {
+					arr[counter] = currentObject;
+				}
+				counter++;
+			}
+
+			// adding to the log
+			addLog("Operation " + (operationsCounter++) + " -> remove: The elements at the index" + index
+					+ " was removed from the array");
+			addLog("Current array content at time:"
+					+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
+			addLog(this.toString());
+		}
 	}
 
 	/**
@@ -107,6 +221,13 @@ public class CustomArrayList<E> implements Iterable<E>, Serializable {
 				}
 			}
 			arr = tempList.getPrimitiveArray();
+
+			// adding to the log
+			addLog("Operation " + (operationsCounter++)
+					+ " -> removeAll: The elements from the parameter list was removed from the array");
+			addLog("Current array content at time:"
+					+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
+			addLog(this.toString());
 		}
 		return removalDone;
 	}
@@ -126,6 +247,13 @@ public class CustomArrayList<E> implements Iterable<E>, Serializable {
 				}
 			}
 			arr = tempList.getPrimitiveArray();
+
+			// adding to the log
+			addLog("Operation " + (operationsCounter++)
+					+ " -> retainAll: The elements from the parameter list was retained in the array");
+			addLog("Current array content at time:"
+					+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
+			addLog(this.toString());
 		}
 
 	}
@@ -162,6 +290,12 @@ public class CustomArrayList<E> implements Iterable<E>, Serializable {
 					}
 				}
 			}
+
+			// adding to the log
+			addLog("Operation " + (operationsCounter++) + " -> sort: The elements were sorted in ascending order");
+			addLog("Current array content at time:"
+					+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
+			addLog(this.toString());
 		}
 	}
 
@@ -170,14 +304,24 @@ public class CustomArrayList<E> implements Iterable<E>, Serializable {
 	 * works for strings and numerical data types
 	 */
 	public void reverseSort() {
-		sort();
-		Object[] temp = arr;
-		int currentIteration = arr.length;
-		for (Object currentObject : temp) {
-			currentIteration--;
-			arr[currentIteration] = currentObject;
-		}
+		if (arr == null | arr.length == 1) {
+			return;
+		} else {
+			sort();
+			Object[] temp = arr;
+			int currentIteration = arr.length;
+			for (Object currentObject : temp) {
+				currentIteration--;
+				arr[currentIteration] = currentObject;
+			}
 
+			// adding to the log
+			addLog("Operation " + (operationsCounter++)
+					+ " -> reverseSort: The elements were sorted in ascending order");
+			addLog("Current array content at time:"
+					+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()));
+			addLog(this.toString());
+		}
 	}
 
 	private void QuickSort(int low, int high) {
@@ -216,6 +360,18 @@ public class CustomArrayList<E> implements Iterable<E>, Serializable {
 
 	}
 
+	public void printLog() {
+		for (String currentString : log) {
+			System.out.println(currentString);
+		}
+	}
+
+	/**
+	 * Returns true if the entry is present in the array
+	 * 
+	 * @param entry that needs to be checked
+	 * @return if the entry in the parameter is present in the array
+	 */
 	public boolean contains(Object entry) {
 		for (Object currentObject : arr) {
 			if (entry == currentObject) {
@@ -246,7 +402,7 @@ public class CustomArrayList<E> implements Iterable<E>, Serializable {
 	 */
 	public String toString() {
 		if (arr == null) {
-			return "[]";
+			return "[]\n";
 		} else {
 			String toString = "";
 			for (Object currentObject : arr) {
@@ -256,6 +412,18 @@ public class CustomArrayList<E> implements Iterable<E>, Serializable {
 			}
 			return toString;
 		}
+	}
+
+	private void addLog(String logLine) {
+		String tempArray[] = log;
+		log = new String[log.length + 1];
+
+		int counter = 0;
+		for (String currentTempObj : tempArray) {
+			log[counter] = currentTempObj;
+			counter++;
+		}
+		log[counter] = logLine;
 	}
 
 	/**
@@ -273,6 +441,9 @@ public class CustomArrayList<E> implements Iterable<E>, Serializable {
 
 		@Override
 		public boolean hasNext() {
+			if (arr == null) {
+				return false;
+			}
 			if (currentIteratorPosition < arr.length) {
 				return true;
 			} else {
@@ -293,4 +464,5 @@ public class CustomArrayList<E> implements Iterable<E>, Serializable {
 			return (E) arr[currentIteratorPosition++];
 		}
 	}
+
 }

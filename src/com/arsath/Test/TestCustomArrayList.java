@@ -8,6 +8,10 @@ public class TestCustomArrayList {
 
 		list.add("aa");
 		list.add("bb");
+		for (String c : list) {
+			System.out.println(c);
+		}
+
 		System.out.println(list);
 		list.addAll(list);
 
@@ -129,5 +133,8 @@ public class TestCustomArrayList {
 		System.out.println(floatList);
 		floatList.reverseSort();
 		System.out.println(floatList);
+
+		System.out.println("*****************************************");
+		list.printLog();
 	}
 }
