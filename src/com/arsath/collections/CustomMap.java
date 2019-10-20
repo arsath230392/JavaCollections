@@ -160,6 +160,13 @@ public class CustomMap<K, V> implements Iterable<MapEntrySet>, Serializable {
 		return false;
 	}
 
+	public int getSize() {
+		if (arr == null) {
+			return 0;
+		}
+		return arr.length;
+	}
+
 	/**
 	 * @return the values of the Map in a readable format
 	 */
