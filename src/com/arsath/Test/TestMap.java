@@ -1,7 +1,6 @@
 package com.arsath.Test;
 
 import com.arsath.collections.CustomMap;
-import com.arsath.collections.MapEntrySet;
 
 public class TestMap {
 	public static void main(String[] args) {
@@ -12,5 +11,7 @@ public class TestMap {
 		map.put("1", "change");
 
 		System.out.println(map);
+
+		System.out.println(map.getValue("1"));
 	}
 }

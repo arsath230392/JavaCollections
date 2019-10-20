@@ -266,6 +266,20 @@ public class CustomArrayList<E> implements Iterable<E>, Serializable {
 	}
 
 	/**
+	 * 
+	 * @param index - the index at which the element needs to be fetched
+	 * @return the value at the index is returned
+	 * @throws WrongIndexException
+	 */
+	@SuppressWarnings("unchecked")
+	public E getAt(int index) throws WrongIndexException {
+		if (arr == null | arr.length >= index | index < 0) {
+			throw new WrongIndexException("The index is either out of bound or the array is empty");
+		}
+		return (E) arr[index];
+	}
+
+	/**
 	 * Sorts the elements in ascending order. This sort is a generic sort that works
 	 * for strings and numerical data types
 	 */
@@ -367,6 +381,9 @@ public class CustomArrayList<E> implements Iterable<E>, Serializable {
 
 	}
 
+	/**
+	 * Prints all the operation performed on this list from the beginning
+	 */
 	public void printLog() {
 		for (String currentString : log) {
 			System.out.println(currentString);

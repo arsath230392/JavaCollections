@@ -64,6 +64,25 @@ public class CustomMap<K, V> implements Iterable<MapEntrySet>, Serializable {
 	}
 
 	/**
+	 * The corresponding value of the key is returned
+	 * 
+	 * @param key- this key searched in the map
+	 * @return V - the value corresponding to the key
+	 */
+	@SuppressWarnings("unchecked")
+	public V getValue(K key) {
+		if (arr == null | !this.containsKey(key)) {
+			return null;
+		}
+		for (MapEntrySet currentEntrySet : arr) {
+			if (key == currentEntrySet.getKey()) {
+				return (V) currentEntrySet.getValue();
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * The key value pair in the index is replaced with the new value in the
 	 * parameter
 	 * 
@@ -134,7 +153,7 @@ public class CustomMap<K, V> implements Iterable<MapEntrySet>, Serializable {
 	 */
 	public boolean containsKey(K key) {
 		for (MapEntrySet currentEntrySet : arr) {
-			if (currentEntrySet == key) {
+			if (currentEntrySet.getKey() == key) {
 				return true;
 			}
 		}
