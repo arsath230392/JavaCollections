@@ -11,8 +11,6 @@ public class TestMap {
 		map.put("3", "dsafg");
 		map.put("1", "change");
 
-		for (MapEntrySet currentEntrySet : map) {
-			System.out.println("Key->" + currentEntrySet.getKey() + " :: Value->" + currentEntrySet.getValue());
-		}
+		System.out.println(map);
 	}
 }

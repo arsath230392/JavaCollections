@@ -28,6 +28,10 @@ public class CustomArrayList<E> implements Iterable<E>, Serializable {
 		addLog(this.toString());
 	}
 
+	/**
+	 * 
+	 * @param the initialArray is copied to the current array
+	 */
 	public CustomArrayList(E[] initialArray) {
 		arr = initialArray;
 
@@ -47,6 +51,9 @@ public class CustomArrayList<E> implements Iterable<E>, Serializable {
 		addLog(this.toString());
 	}
 
+	/**
+	 * Default constructor
+	 */
 	public CustomArrayList() {
 		// adding to the log
 		addLog("Operation " + (operationsCounter++) + " -> An Empty array was initialised");
