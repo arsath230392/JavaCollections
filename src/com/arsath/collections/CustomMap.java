@@ -3,6 +3,9 @@ package com.arsath.collections;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import com.arsath.collections.helper.MapEntrySet;
+import com.arsath.collections.helper.WrongIndexException;
+
 public class CustomMap<K, V> implements Iterable<MapEntrySet>, Serializable {
 
 	private static final long serialVersionUID = 2725506582821619105L;

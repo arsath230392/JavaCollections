@@ -1,4 +1,4 @@
-package com.arsath.collections;
+package com.arsath.collections.helper;
 
 public class WrongIndexException extends Exception {
 

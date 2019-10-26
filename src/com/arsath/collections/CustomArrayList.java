@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 
+import com.arsath.collections.helper.WrongIndexException;
+
 public class CustomArrayList<E> implements Iterable<E>, Serializable {
 
 	private static final long serialVersionUID = -3978994619048637774L;
