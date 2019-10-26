@@ -8,20 +8,24 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.WindowConstants;
 
+import com.arsath.collections.Enums.TableColumnTypes;
+import com.arsath.collections.Exceptions.ColumnExistException;
+import com.arsath.collections.Exceptions.UnableToInitialteTableException;
+import com.arsath.collections.Exceptions.WrongIndexException;
+import com.arsath.collections.Exceptions.WrongTypeException;
 import com.arsath.collections.helper.TableColumn;
 import com.arsath.collections.helper.TableRow;
-import com.arsath.collections.helper.UnableToInitialteTableException;
-import com.arsath.collections.helper.WrongIndexException;
-import com.arsath.collections.helper.WrongTypeException;
 
 @SuppressWarnings("rawtypes")
-public class CustomTable implements Iterable<CustomMap>, Serializable {
+public class CustomTable implements Serializable {
 
 	private static final long serialVersionUID = 3895666524658697673L;
 
 	private TableRow[] arr = null;
 	private TableRow headerRow = null;
 	private TableRow headerTypeinformation = null;
+
+	private int rowPointer = 0;
 
 	/**
 	 * Constructor with number of initial columns
@@ -54,10 +58,12 @@ public class CustomTable implements Iterable<CustomMap>, Serializable {
 	public void addRow() {
 		if (arr == null) {
 			arr = new TableRow[1];
+			arr[0] = new TableRow(this.getNumberOfColumns());
 		} else {
 			TableRow[] temp = arr;
 			arr = new TableRow[arr.length + 1];
 			System.arraycopy(temp, 0, arr, 0, arr.length - 1);
+			arr[arr.length - 1] = new TableRow(this.getNumberOfColumns());
 		}
 	}
 
@@ -111,6 +117,75 @@ public class CustomTable implements Iterable<CustomMap>, Serializable {
 	}
 
 	/**
+	 * Sets the name of the column
+	 * 
+	 * @param index - the index of the header row
+	 * @param name  - the name that has to be set
+	 * @throws WrongIndexException
+	 * @throws ColumnExistException
+	 */
+	public void setColumnName(int index, String name) throws WrongIndexException, ColumnExistException {
+		if (arr == null) {
+			throw new NullPointerException();
+		} else if (index < 0 | index >= arr.length) {
+			throw new WrongIndexException("The column is incorrect");
+		} else if (columnExist(name)) {
+			throw new ColumnExistException("The column name already exisits");
+		} else {
+			headerRow.setColumnValue(index, name);
+		}
+
+	}
+
+	/**
+	 * The column type is set for type safe operations
+	 * 
+	 * @param index
+	 * @param type
+	 * @throws WrongIndexException
+	 */
+	public void setColumnType(int index, TableColumnTypes type) throws WrongIndexException {
+		if (arr == null) {
+			throw new NullPointerException();
+		} else if (index < 0 | index >= arr.length) {
+			throw new WrongIndexException("The column is incorrect");
+		} else {
+			headerTypeinformation.setColumnValue(index, type);
+		}
+	}
+
+	public boolean columnExist(String name) {
+		for (TableColumn currentColumn : headerRow) {
+			if (currentColumn.getValue().toString().equals(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Sets the Object value at the row and column mentioned in the parameter
+	 * 
+	 * @param row
+	 * @param column
+	 * @param value
+	 * @throws WrongIndexException
+	 * @throws WrongTypeException
+	 */
+	public void setObjectAtPosition(int row, int column, Object value) throws WrongIndexException, WrongTypeException {
+		if (row > this.getNumberOfRows() | column > this.getNumberOfColumns() | row < 0 | column < 0) {
+			throw new WrongIndexException("The row or column is incorrect");
+		} else {
+			if (headerTypeinformation.getColumnValue(column).toString().equals(TableColumnTypes.Object.toString())) {
+				setAtPosition(row, column, value);
+			} else {
+				throw new WrongTypeException("The type of the column is incorrect :: Expected type->"
+						+ headerTypeinformation.getColumnValue(column));
+			}
+		}
+	}
+
+	/**
 	 * Sets the String value at the row and column mentioned in the parameter
 	 * 
 	 * @param row
@@ -123,7 +198,7 @@ public class CustomTable implements Iterable<CustomMap>, Serializable {
 		if (row > this.getNumberOfRows() | column > this.getNumberOfColumns() | row < 0 | column < 0) {
 			throw new WrongIndexException("The row or column is incorrect");
 		} else {
-			if (headerTypeinformation.getColumnValue(column).toString().equals("String")) {
+			if (headerTypeinformation.getColumnValue(column).toString().equals(TableColumnTypes.String.toString())) {
 				setAtPosition(row, column, value);
 			} else {
 				throw new WrongTypeException("The type of the column is incorrect :: Expected type->"
@@ -146,7 +221,7 @@ public class CustomTable implements Iterable<CustomMap>, Serializable {
 		if (row > this.getNumberOfRows() | column > this.getNumberOfColumns() | row < 0 | column < 0) {
 			throw new WrongIndexException("The row or column is incorrect");
 		} else {
-			if (headerTypeinformation.getColumnValue(column).toString().equals("Integer")) {
+			if (headerTypeinformation.getColumnValue(column).toString().equals(TableColumnTypes.Integer.toString())) {
 				setAtPosition(row, column, value);
 			} else {
 				throw new WrongTypeException("The type of the column is incorrect :: Expected type->"
@@ -168,7 +243,7 @@ public class CustomTable implements Iterable<CustomMap>, Serializable {
 		if (row > this.getNumberOfRows() | column > this.getNumberOfColumns() | row < 0 | column < 0) {
 			throw new WrongIndexException("The row or column is incorrect");
 		} else {
-			if (headerTypeinformation.getColumnValue(column).toString().equals("Byte")) {
+			if (headerTypeinformation.getColumnValue(column).toString().equals(TableColumnTypes.Byte.toString())) {
 				setAtPosition(row, column, value);
 			} else {
 				throw new WrongTypeException("The type of the column is incorrect :: Expected type->"
@@ -190,7 +265,7 @@ public class CustomTable implements Iterable<CustomMap>, Serializable {
 		if (row > this.getNumberOfRows() | column > this.getNumberOfColumns() | row < 0 | column < 0) {
 			throw new WrongIndexException("The row or column is incorrect");
 		} else {
-			if (headerTypeinformation.getColumnValue(column).toString().equals("Integer")) {
+			if (headerTypeinformation.getColumnValue(column).toString().equals(TableColumnTypes.Double.toString())) {
 				setAtPosition(row, column, value);
 			} else {
 				throw new WrongTypeException("The type of the column is incorrect :: Expected type->"
@@ -212,7 +287,7 @@ public class CustomTable implements Iterable<CustomMap>, Serializable {
 		if (row > this.getNumberOfRows() | column > this.getNumberOfColumns() | row < 0 | column < 0) {
 			throw new WrongIndexException("The row or column is incorrect");
 		} else {
-			if (headerTypeinformation.getColumnValue(column).toString().equals("Short")) {
+			if (headerTypeinformation.getColumnValue(column).toString().equals(TableColumnTypes.Short.toString())) {
 				setAtPosition(row, column, value);
 			} else {
 				throw new WrongTypeException("The type of the column is incorrect :: Expected type->"
@@ -269,16 +344,64 @@ public class CustomTable implements Iterable<CustomMap>, Serializable {
 		arr[row].setColumnValue(column, value);
 	}
 
+	private String getStringValueAtPosition(int row, int column) throws WrongIndexException, WrongTypeException {
+		String stringValue = "";
+		if (row > this.getNumberOfRows() | column > this.getNumberOfColumns() | row < 0 | column < 0) {
+			throw new WrongIndexException("The row or column is incorrect");
+		} else {
+			if (headerTypeinformation.getColumnValue(column).toString().equals(TableColumnTypes.String.toString())) {
+				stringValue = getValueAtPosition(row, column).toString();
+			} else {
+				throw new WrongTypeException("The type of the column is incorrect :: Expected type->"
+						+ headerTypeinformation.getColumnValue(column));
+			}
+		}
+		return stringValue;
+	}
+
+	private Object getValueAtPosition(int row, int column) throws WrongIndexException {
+		if (arr[row] == null) {
+			return null;
+		}
+		return arr[row].getColumnValue(column);
+	}
+
 	public void visualize() {
 		JFrame frame = new JFrame();
 		frame.setTitle("Table Visualization");
-		String[] columnNames = new String[this.getNumberOfColumns()];
-		int counter = 0;
+		String[] columnNames = new String[this.getNumberOfColumns() + 1];
+		columnNames[0] = "Row/ColumnName";
+		int counter = 1;
 		for (TableColumn currentHeader : headerRow) {
 			columnNames[counter] = (String) currentHeader.getValue();
 			counter++;
 		}
-		Object[][] data = new Object[this.getNumberOfRows()][this.getNumberOfColumns()];
+		Object[][] data = new Object[this.getNumberOfRows() + 1][this.getNumberOfColumns() + 1];
+		data[0][0] = "";
+		int columnCounter = 1;
+		// the type information is set after the header
+		for (TableColumn currentType : headerTypeinformation) {
+			data[0][columnCounter] = "Type = " + currentType.getValue();
+			columnCounter++;
+		}
+		// the actual values are set
+		for (int rowCounter = 0; rowCounter < this.getNumberOfRows(); rowCounter++) {
+			if (rowCounter == rowPointer) {
+				data[rowCounter + 1][0] = "=> " + rowCounter;
+			} else {
+				data[rowCounter + 1][0] = rowCounter;
+			}
+			for (int columnCounterdata = 0; columnCounterdata < this.getNumberOfColumns(); columnCounterdata++) {
+				try {
+					if (arr != null) {
+						data[rowCounter + 1][columnCounterdata + 1] = this.getValueAtPosition(rowCounter,
+								columnCounterdata);
+					}
+				} catch (WrongIndexException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		JTable table = new JTable(data, columnNames);
 		table.setBounds(30, 40, 200, 300);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -303,13 +426,30 @@ public class CustomTable implements Iterable<CustomMap>, Serializable {
 		return arr.length;
 	}
 
+	/**
+	 * The total number of columns in the table
+	 * 
+	 * @return the number of column
+	 */
 	public int getNumberOfColumns() {
 		return headerRow.getColumnSize();
 	}
 
-	@Override
-	public Iterator<CustomMap> iterator() {
-		return null;
+	// The below methods are for navigating the table
+	public boolean hasNextRow() {
+		return false;
+
 	}
 
+	public void moveToNextRow() {
+
+	}
+
+	public int getCurrentRowPointer() {
+		return 0;
+	}
+
+	public void setRowPointer(int positionToSet) {
+
+	}
 }

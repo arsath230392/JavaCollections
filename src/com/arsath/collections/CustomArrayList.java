@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 
-import com.arsath.collections.helper.WrongIndexException;
+import com.arsath.collections.Exceptions.WrongIndexException;
 
 public class CustomArrayList<E> implements Iterable<E>, Serializable {
 

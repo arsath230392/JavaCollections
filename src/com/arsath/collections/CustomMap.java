@@ -3,8 +3,8 @@ package com.arsath.collections;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import com.arsath.collections.Exceptions.WrongIndexException;
 import com.arsath.collections.helper.MapEntrySet;
-import com.arsath.collections.helper.WrongIndexException;
 
 public class CustomMap<K, V> implements Iterable<MapEntrySet>, Serializable {
 

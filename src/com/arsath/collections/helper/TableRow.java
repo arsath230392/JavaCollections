@@ -3,6 +3,8 @@ package com.arsath.collections.helper;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import com.arsath.collections.Exceptions.WrongIndexException;
+
 public class TableRow implements Iterable<TableColumn>, Serializable {
 
 	private static final long serialVersionUID = -303344631636989311L;
@@ -28,6 +30,9 @@ public class TableRow implements Iterable<TableColumn>, Serializable {
 	public Object getColumnValue(int columnIndex) throws WrongIndexException {
 		if (arr == null | columnIndex < 0 | columnIndex >= this.getColumnSize()) {
 			throw new WrongIndexException("The column index is wrong");
+		}
+		if (arr[columnIndex] == null) {
+			return null;
 		}
 		return arr[columnIndex].getValue();
 	}
