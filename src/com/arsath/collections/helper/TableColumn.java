@@ -8,11 +8,15 @@ public class TableColumn implements Serializable {
 	Object content = null;
 
 	public Object getValue() {
-		return content;
+		return this.content;
 	}
 
 	public void setValue(Object value) {
 		this.content = value;
+	}
+
+	public String toString() {
+		return this.content.toString();
 	}
 
 }

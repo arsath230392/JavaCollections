@@ -15,6 +15,13 @@ public class TableRow implements Iterable<TableColumn>, Serializable {
 		arr = new TableColumn[numberOfColumns];
 	}
 
+	/**
+	 * Default constructor is not enabled. The number of column is mandatory
+	 */
+	@SuppressWarnings("unused")
+	private TableRow() {
+	}
+
 	public void setColumnValue(int columnIndex, Object value) throws WrongIndexException {
 		if (arr == null) {
 			throw new NullPointerException("The Table row is null");
@@ -84,6 +91,34 @@ public class TableRow implements Iterable<TableColumn>, Serializable {
 			arr = new TableColumn[arr.length + 1];
 			System.arraycopy(temp, 0, arr, 0, temp.length);
 			arr[arr.length - 1] = column;
+		}
+	}
+
+	public void insertColumnAtIndex(int columnindex, TableColumn column) {
+		if (arr == null & columnindex == 0) {
+			arr = new TableColumn[1];
+			arr[0] = column;
+		} else {
+			TableColumn[] temp = arr;
+			arr = new TableColumn[arr.length + 1];
+			int columnCounter = 0;
+			for (TableColumn currentTempColumn : temp) {
+				if (columnCounter == columnindex) {
+					arr[columnCounter] = column;
+					columnCounter++;
+				}
+				arr[columnCounter] = currentTempColumn;
+				columnCounter++;
+			}
+		}
+	}
+
+	public void removeColumnAtIndex(int columnindex) {
+		if (arr == null) {
+			throw new NullPointerException();
+		}
+		if (columnindex == 0 && this.getColumnSize() == 1) {
+			arr = null;
 		}
 	}
 }
